@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Send, User, Mail, Phone, UserCheck, Users, Trophy, Plus, X } from "lucide-react";
 import styles from "./AddTeamForm.module.css";  
 import { useParams } from "react-router";
@@ -9,6 +9,9 @@ import { ToastContainer,toast } from "react-toastify";
 
 const AddTeamForm = () => {
   const {id}=useParams();
+  // useEffect(()=>{
+  //    fetch(API_ENDPOINTS.EVENT_DETAIL(id))
+  // })
   let navigate=useNavigate();
   const beUrl="https://aavishkaar2025-be.onrender.com/aavishkaar/teams/register";
   const [formData, setFormData] = useState({
@@ -43,23 +46,33 @@ const AddTeamForm = () => {
       await axios.post(beUrl, formData);
       notify();
       // setTimeout(()=>navigate("https://chat.whatsapp.com/L43AtjqvFUcIAM1BckgPfn"),4000);
-      setTimeout(() => window.open("https://chat.whatsapp.com/L43AtjqvFUcIAM1BckgPfn", "_blank"), 4000);
+      setTimeout(() => navigate('/acknowledgement/'), 4000);
 
     } catch (e) {
       if (e.response) {
-        console.error("ServerError:", e.response.data); 
+        console.error("ServerError:", e.response.data.message); 
+        toast.error(`Registration Failed! ${e.response.data.message}`,{
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          theme: "light",
+        });
       } else {
         console.error("RequestError:", e.message);
+        toast.error(`Registration Failed! ${e.message}`,{
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          theme: "light",
+        });
       }
-      toast.error("Registration Failed! Try again.",{
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        theme: "light",
-      });
+      
     }
 
   };
